@@ -1,0 +1,2 @@
+# PGNSplitter
+Streaming PGN splitter
