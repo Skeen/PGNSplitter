@@ -74,4 +74,11 @@ $ ls -v output
 4.pgn
 ...
 
+$ cat output/0.pgn
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/tGpzk7yJ"]
+[White "calvinmaster"]
+[Black "dislikechess"]
+[Result "1-0"]
+...
 ```
