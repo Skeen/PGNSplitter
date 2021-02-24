@@ -5,7 +5,7 @@ from typing import Iterator, Optional
 
 import typer
 from chess.pgn import skip_game
-from more_itertools import consume, pairwise
+from more_itertools import consume, ichunked, pairwise
 from tqdm import tqdm
 
 
@@ -49,6 +49,9 @@ def split(
     games: Optional[int] = typer.Option(
         default=None, min=0, help="Number of games to extract from FILENAME."
     ),
+    chunked: int = typer.Option(
+        default=1, min=1, help="Number of games exported to each file."
+    ),
     filename: Path = typer.Argument(
         ...,
         exists=True,
@@ -77,8 +80,9 @@ def split(
     By default all games are exported, but the number of games being exported can
     be limited using --games, and the scanning can be offset using --start.
     """
-
+    # Find byte offsets for splits between PGNs
     seperators: Iterator[int] = find_byte_boundaries(filename)
+    # Offset by skipping 'skip' PGNs
     if skip:
         consume(seperators, skip)
 
@@ -91,11 +95,14 @@ def split(
     if games:
         blocks = tqdm(blocks, total=games, unit="games")
 
-    for i, block in enumerate(blocks):
+    chunks = ichunked(blocks, chunked)
+
+    for i, chunk in enumerate(chunks):
         if dry_run:
             continue
         with open(f"{output_folder}/{str(i)}.pgn", "wb") as pgn:
-            pgn.write(block)
+            for block in chunk:
+                pgn.write(block)
 
 
 if __name__ == "__main__":

@@ -33,6 +33,9 @@ Options:
                                   producing output.
 
   --games INTEGER RANGE           Number of games to extract from FILENAME.
+  --chunked INTEGER RANGE         Number of games exported to each file.
+                                  [default: 1]
+
   --dry-run / --no-dry-run        Dry run the operation, thereby not producing
                                   any files.  [default: False]
 
